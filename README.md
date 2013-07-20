@@ -1,0 +1,4 @@
+chitchat
+========
+
+Erlang Chat app
