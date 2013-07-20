@@ -65,3 +65,85 @@ chat_client:send_message("Alice", "Bye Alice").
   Unknown client
   {send_chat_msg,"Alice","Bye Alice"}
 ```
+
+Multi-node chat:
+  - Start two different nodes:
+  ```
+  erl -sname node1 -setcookie chitchat
+  ```
+  ```
+  erl -sname node2 -setcookie chitchat
+  ```
+
+  - let's test if the nodes see each other:
+  ```
+  (node1@imac-de-julien)1> net_adm:ping('node2@imac-de-julien').
+    pong
+  ```
+  ```
+  (node2@imac-de-julien)1> net_adm:ping('node1@imac-de-julien').
+    pong
+  ```
+
+  - node1 will be the message router:
+  ```erlang
+  (node1@imac-de-julien)3> chat_client:start_router().
+    yes
+  ```
+
+  - node2 can see the registered message_router:
+  ```erlang
+  (node2@imac-de-julien)2> global:registered_names().
+    [message_router]
+  ```
+
+  - register a nickname 'Alice' on node1:
+  ```erlang
+  (node1@imac-de-julien)4> chat_client:register_nickname("Alice").
+    <0.49.0>
+  ```
+
+  - register a nickname 'Bob' on node2:
+  ```erlang
+  (node2@imac-de-julien)4> chat_client:register_nickname("Bob").
+    <5898.49.0>
+  ```
+
+  - Alice sends a message to Bob:
+  ```erlang
+  (node1@imac-de-julien)5> chat_client:send_message("Bob", "Hi Bob!").
+    <0.49.0>
+  ```
+
+  - On Bob's side:
+  ```erlang
+  "Bob" received: "Hi Bob!"
+  ```
+
+  - Bob replies:
+  ```erlang
+  (node2@imac-de-julien)4> chat_client:send_message("Alice", "How R U Alice?").
+    <5898.49.0>
+  ```
+
+  - On Alice's side:
+  ```erlang
+  "Alice" received: "How R U Alice?"
+  ```
+
+  - Now test unregistering Alice:
+  ```erlang
+  (node1@imac-de-julien)7> chat_client:unregister_nickname("Alice").
+    <0.49.0>
+  ```
+
+  - Bob tries to send a message to Alice again:
+  ```erlang
+  (node2@imac-de-julien)5> chat_client:send_message("Alice", "U there?").
+    <5898.49.0>
+  ```
+
+  - On node1 (the message router):
+  ```
+  Error: Unknown client: "Alice"
+  ```

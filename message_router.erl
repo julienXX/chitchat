@@ -5,20 +5,36 @@
 -compile(export_all).
 
 start() ->
-    Pid = spawn(message_router, route_messages, [dict:new()]),
-    erlang:register(?SERVER, Pid).
+    global:trans({?SERVER, ?SERVER},
+                fun() ->
+                        case global:whereis_name(?SERVER) of
+                            undefined ->
+                                Pid = spawn(message_router, route_messages, [dict:new()]),
+                                global:register_name(?SERVER, Pid);
+                            _ ->
+                                ok
+                        end
+                end).
 
 stop() ->
-    ?SERVER ! shutdown.
+    global:trans({?SERVER, ?SERVER},
+                fun() ->
+                        case global:whereis(?SERVER) of
+                            undefined ->
+                                ok;
+                            _ ->
+                              global:send(?SERVER, shutdown)
+                        end
+                 end).
 
 send_chat_message(Target, Msg) ->
-    ?SERVER ! {send_chat_msg, Target, Msg}.
+    global:send(?SERVER, {send_chat_msg, Target, Msg}).
 
 register_nick(ClientName, ClientPid) ->
-    ?SERVER ! {register_nick, ClientName, ClientPid}.
+    global:send(?SERVER, {register_nick, ClientName, ClientPid}).
 
 unregister_nick(ClientName) ->
-    ?SERVER ! {unregister_nick, ClientName}.
+    global:send(?SERVER, {unregister_nick, ClientName}).
 
 route_messages(Clients) ->
     receive
