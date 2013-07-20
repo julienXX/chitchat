@@ -43,7 +43,7 @@ route_messages(Clients) ->
                 {ok, ClientPid} ->
                     ClientPid ! {printmsg, Msg};
                 error ->
-                    io:format("Error: Unknown client: ~p~n", [ClientName])
+                    io:format("[Error] Unknown client: ~p~n", [ClientName])
             end,
             route_messages(Clients);
         {register_nick, ClientName, ClientPid} ->
@@ -54,11 +54,11 @@ route_messages(Clients) ->
                     ClientPid ! stop,
                     route_messages(dict:erase(ClientName, Clients));
                 error ->
-                    io:format("Error: Unknown client: ~p~n", [ClientName]),
+                    io:format("[Error] Unknown client: ~p~n", [ClientName]),
                     route_messages(Clients)
             end;
         shutdown ->
-            io:format("Shutting down~n");
+            io:format("[Info] Shutting down~n");
         Unexpected ->
             io:format("[Warning] Received ~p~n", [Unexpected]),
             route_messages(Clients)
