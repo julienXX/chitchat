@@ -18,7 +18,7 @@ chat_client:send_message(P, P, "Hello from client").
 
 Send a message from a client to another router:
 ```erlang
-P1 = message_router:start().
+P1 = chat_client:start_router().
 chat_client:send_message(P, P1, "Hello from client to router #1").
 ```
 
@@ -27,11 +27,11 @@ Stop message router:
 message_router:stop(P).
 ```
 
-Conversation after send_message API refactoring:
+Conversation:
 ```erlang
-P1 = message_router:start().
+P1 = chat_client:start_router().
   <0.136.0>
-P2 = message_router:start().
+P2 = chat_client:start_router().
   <0.138.0>
 chat_client:send_message(P1, P2, "Hello P2!").
   Received "Hello P2!"
