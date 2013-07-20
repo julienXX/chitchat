@@ -46,3 +46,22 @@ message_router:stop(P2).
   Shutting down
   shutdown
 ```
+
+Nickname registration:
+```erlang
+chat_client:start_router().
+  true
+chat_client:register_nickname("Alice").
+  {register_nick,"Alice",#Fun<chat_client.0.124345407>}
+chat_client:send_message("Alice", "Hello Alice").
+  "Alice" received: "Hello Alice"
+  {send_chat_msg,"Alice","Hello Alice"}
+chat_client:send_message("Alice", "Bye Alice").
+  "Alice" received: "Bye Alice"
+  {send_chat_msg,"Alice","Bye Alice"}
+chat_client:unregister_nickname("Alice").
+  {unregister_nick,"Alice"}
+chat_client:send_message("Alice", "Bye Alice").
+  Unknown client
+  {send_chat_msg,"Alice","Bye Alice"}
+```
