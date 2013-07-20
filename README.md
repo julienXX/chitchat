@@ -26,3 +26,17 @@ Stop message router:
 ```erlang
 message_router:stop(P).
 ```
+
+Conversation afetr refactoring:
+```erlang
+P1 = message_router:start().
+  <0.136.0>
+P2 = message_router:start().
+  <0.138.0>
+chat_client:send_message(P1, P2, "Hello P2!").
+  Received "Hello P2!"
+  {send_chat_msg,<0.138.0>,"Hello P2!"}
+chat_client:send_message(P2,P1,"How are you P1?").
+  Received "How are you P1?"
+  {send_chat_msg,<0.136.0>,"How are you P1?"}
+```
