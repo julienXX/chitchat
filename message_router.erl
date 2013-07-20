@@ -1,15 +1,19 @@
 -module(message_router).
 
+-define(SERVER, message_router).
+
 -compile(export_all).
 
 start(PrintFun) ->
-    spawn(message_router, route_messages, [PrintFun]).
+    Pid = spawn(message_router, route_messages, [PrintFun]),
+    erlang:register(?SERVER, Pid),
+    Pid.
 
-stop(RouterPid) ->
-    RouterPid ! shutdown.
+stop() ->
+    ?SERVER ! shutdown.
 
-send_chat_message(Source, Target, MsgBody) ->
-    Source ! {send_chat_msg, Target, MsgBody}.
+send_chat_message(Target, MsgBody) ->
+    ?SERVER ! {send_chat_msg, Target, MsgBody}.
 
 route_messages(PrintFun) ->
     receive

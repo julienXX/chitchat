@@ -2,8 +2,8 @@
 
 -compile(export_all).
 
-send_message(Source, Target, MsgBody) ->
-    message_router:send_chat_message(Source, Target, MsgBody).
+send_message(Target, MsgBody) ->
+    message_router:send_chat_message(Target, MsgBody).
 
 print_message(MsgBody) ->
     io:format("Received: ~p~n", [MsgBody]).
