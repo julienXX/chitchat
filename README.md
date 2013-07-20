@@ -39,4 +39,10 @@ chat_client:send_message(P1, P2, "Hello P2!").
 chat_client:send_message(P2,P1,"How are you P1?").
   Received "How are you P1?"
   {send_chat_msg,<0.136.0>,"How are you P1?"}
+message_router:stop(P1).
+  Shutting down
+  shutdown
+message_router:stop(P2).
+  Shutting down
+  shutdown
 ```
