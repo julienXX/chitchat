@@ -2,5 +2,5 @@
 
 -compile(export_all).
 
-send_message(RouterPid, Target, MsgBody) ->
-    RouterPid ! {send_chat_msg, Target, MsgBody}.
+send_message(Source, Target, MsgBody) ->
+    message_router:send_chat_message(Source, Target, MsgBody).

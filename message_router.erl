@@ -8,6 +8,9 @@ start() ->
 stop(RouterPid) ->
     RouterPid ! shutdown.
 
+send_chat_message(Source, Target, MsgBody) ->
+    Source ! {send_chat_msg, Target, MsgBody}.
+
 route_messages() ->
     receive
         {send_chat_msg, Target, MsgBody} ->
