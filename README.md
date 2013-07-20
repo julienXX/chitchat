@@ -27,7 +27,7 @@ Stop message router:
 message_router:stop(P).
 ```
 
-Conversation afetr refactoring:
+Conversation after send_message API refactoring:
 ```erlang
 P1 = message_router:start().
   <0.136.0>
